@@ -17,15 +17,32 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if Input.is_action_pressed("ui_down"):
-		position.y += delta * speed
-	elif Input.is_action_pressed("ui_up"):
-		position.y -= delta * speed
-	if Input.is_action_pressed("ui_right"):
-		position.x += delta * speed
-	elif Input.is_action_pressed("ui_left"):
-		position.x -= delta * speed
 
+	var distance = Vector2(0,0)
+
+	if Input.is_action_pressed("ui_down"):
+		distance.y = 1
+	elif Input.is_action_pressed("ui_up"):
+		distance.y = -1
+	if Input.is_action_pressed("ui_right"):
+		distance.x = 1
+	elif Input.is_action_pressed("ui_left"):
+		distance.x = -1
+	distance = distance.normalized() * speed * delta
+
+	var new_position = position + distance
+	var viewport_size = get_viewport().size
+
+	if new_position.x < size:
+		new_position.x = size
+	elif new_position.x > (viewport_size.x - size):
+		new_position.x = (viewport_size.x - size)
+	if new_position.y < size:
+		new_position.y = size
+	elif new_position.y > (viewport_size.y - size):
+		new_position.y = (viewport_size.y - size)
+
+	position = new_position
 
 func add_line(pos_start, pos_end):
 	print(pos_start, pos_end)
